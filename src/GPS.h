@@ -30,10 +30,42 @@ public:
   int begin();
   void end();
 
+  int available();
+
+  float latitude();
+  float longitude();
+  float speed(); // Speed over the ground in knots
+  float course(); // Track angle in degrees
+  float variation(); // Magnetic Variation
+  float altitude();
+  int satellites();
+
+  unsigned long getTime();
+
+private:
+  void poll();
+  void parseBuffer();
+
+  static float toDegrees(float f);
+
 private:
   HardwareSerial* _serial;
   unsigned long _baudrate;
   int _extintPin;
+
+  int _available;
+  char _buffer[82 + 1];
+  int _index;
+
+  float _latitude;
+  float _longitude;
+  float _speed;
+  float _course;
+  float _variation;
+  float _altitude;
+  int _satellites;
+
+  struct timespec _ts;
 };
 
 extern GPSClass GPS;

@@ -1,6 +1,8 @@
 = MKRGPS Library for Arduino =
 
-Allows you to read the location and time from the GPS on your MKR GPS shield.
+Allows you to read the location from the GPS on your MKR GPS shield.
+
+This library is based on https://github.com/kosma/minmea[minmea].
 
 == License ==
 
