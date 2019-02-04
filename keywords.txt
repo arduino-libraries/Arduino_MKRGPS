@@ -24,6 +24,9 @@ altitude	KEYWORD2
 satellites	KEYWORD2
 getTime	KEYWORD2
 
+standby	KEYWORD2
+wakeup	KEYWORD2
+
 #######################################
 # Constants
 #######################################

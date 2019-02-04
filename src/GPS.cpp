@@ -17,6 +17,8 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+// Useful info. on NMEA data: https://www.gpsinformation.org/dale/nmea.htm
+
 extern "C" {
   #include "minmea/minmea.h"
 }
@@ -125,6 +127,38 @@ unsigned long GPSClass::getTime()
   return _ts.tv_sec;
 }
 
+void GPSClass::standby()
+{
+  byte payload[48];
+
+  memset(payload, 0x00, sizeof(payload));
+
+  payload[0] = 0x02; // version 2
+  // flags:
+  //       extintSel    = EXTINT0
+  //       extintWake   = enabled, keep receiver awake as long as selected EXTINT pin is 'high'
+  //       extintBackup = enabled, force receiver into BACKUP mode when selected EXTINT pin is 'low' 
+  payload[4] = 0x60;
+
+  sendUbx(0x06, 0x3b, payload, sizeof(payload));
+
+  _serial->end();
+  digitalWrite(_extintPin, LOW);
+
+  _available = 0;
+  _index = 0;
+}
+
+void GPSClass::wakeup()
+{
+  _serial->begin(_baudrate);
+
+  digitalWrite(_extintPin, HIGH);
+
+  _available = 0;
+  _index = 0;
+}
+
 void GPSClass::poll()
 {
   if (_serial->available()) {
@@ -191,6 +225,33 @@ void GPSClass::parseBuffer()
     default:
       break;
   }
+}
+
+void GPSClass::sendUbx(uint8_t cls, uint8_t id, uint8_t payload[], uint16_t length)
+{
+  uint8_t ckA = 0;
+  uint8_t ckB = 0;
+  uint8_t prefix[] = { cls, id, (uint8_t)(length & 0xff), (uint8_t)(length >> 8) };
+
+  for (unsigned int i = 0; i < sizeof(prefix); i++) {
+    ckA += prefix[i];
+    ckB += ckA;
+  }
+
+  for (unsigned int i = 0; i < length; i++) {
+    ckA += payload[i];
+    ckB += ckA;
+  }
+
+  _serial->write(0xb5);
+  _serial->write(0x62);
+  _serial->write(cls);
+  _serial->write(id);
+  _serial->write((uint8_t*)&length, sizeof(length));
+  _serial->write(payload, length);
+  _serial->write(ckA);
+  _serial->write(ckB);
+  _serial->flush();
 }
 
 float GPSClass::toDegrees(float f)

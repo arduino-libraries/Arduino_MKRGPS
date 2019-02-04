@@ -42,9 +42,13 @@ public:
 
   unsigned long getTime();
 
+  void standby();
+  void wakeup();
+
 private:
   void poll();
   void parseBuffer();
+  void sendUbx(uint8_t cls, uint8_t id, uint8_t payload[], uint16_t length);
 
   static float toDegrees(float f);
 
