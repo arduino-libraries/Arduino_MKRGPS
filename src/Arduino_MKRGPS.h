@@ -1,5 +1,5 @@
 /*
-  This file is part of the MKRGPS library.
+  This file is part of the Arduino_MKRGPS library.
   Copyright (c) 2019 Arduino SA. All rights reserved.
 
   This library is free software; you can redistribute it and/or
@@ -17,9 +17,10 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef _MKRGPS_H_
-#define _MKRGPS_H_
+#ifndef _ARDUINO_MKRGPS_H_
+#define _ARDUINO_MKRGPS_H_
 
 #include "GPS.h"
 
 #endif
+

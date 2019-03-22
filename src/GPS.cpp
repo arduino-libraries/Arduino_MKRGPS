@@ -1,5 +1,5 @@
 /*
-  This file is part of the MKRGPS library.
+  This file is part of the Arduino_MKRGPS library.
   Copyright (c) 2019 Arduino SA. All rights reserved.
 
   This library is free software; you can redistribute it and/or

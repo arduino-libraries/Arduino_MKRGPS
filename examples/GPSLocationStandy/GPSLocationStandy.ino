@@ -13,7 +13,7 @@
   This example code is in the public domain.
 */
 
-#include <MKRGPS.h>
+#include <Arduino_MKRGPS.h>
 
 void setup() {
   // initialize serial communications and wait for port to open:
