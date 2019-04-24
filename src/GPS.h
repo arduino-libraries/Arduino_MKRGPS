@@ -34,7 +34,7 @@ public:
 
   float latitude();
   float longitude();
-  float speed(); // Speed over the ground in knots
+  float speed(); // Speed over the ground in kph
   float course(); // Track angle in degrees
   float variation(); // Magnetic Variation
   float altitude();

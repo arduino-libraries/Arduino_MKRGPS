@@ -39,7 +39,7 @@ void loop() {
 
     Serial.print("Ground speed: ");
     Serial.print(GPS.speed());
-    Serial.println(" knots");
+    Serial.println(" km/h");
 
     Serial.print("Number of satellites: ");
     Serial.println(GPS.satellites());

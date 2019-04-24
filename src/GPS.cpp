@@ -95,7 +95,8 @@ float GPSClass::longitude()
 
 float GPSClass::speed()
 {
-  return _speed;
+  // convert speed from knots to kph
+  return _speed * 1.852;
 }
 
 float GPSClass::course()
