@@ -29,9 +29,11 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("standy");
+  // put the GPS in standby mode
+  Serial.println("standby");
   GPS.standby();
 
+  // wait for 10 seconds
   Serial.print("delay ");
   for (int i = 0; i < 10; i++) {
     delay(1000);
@@ -39,11 +41,13 @@ void loop() {
   }
   Serial.println();
 
+  // wake up the GPS
   Serial.println("wakeup");
   GPS.wakeup();
 
   Serial.print("wait location ... ");
-  
+
+  // wait for new GPS data to become available
   unsigned long startMillis = millis();
   while (!GPS.available());
   unsigned long endMillis = millis();
@@ -51,19 +55,25 @@ void loop() {
   Serial.print(endMillis - startMillis);
   Serial.println(" ms");
 
+  // read GPS values
+  float latitude   = GPS.latitude();
+  float longitude  = GPS.longitude();
+  float altitude   = GPS.altitude();
+  int   satellites = GPS.satellites();
+
+  // print GPS values
   Serial.println();
   Serial.print("Location: ");
-  Serial.print(GPS.latitude(), 7);
+  Serial.print(latitude, 7);
   Serial.print(", ");
-  Serial.println(GPS.longitude(), 7);
+  Serial.println(longitude, 7);
 
   Serial.print("Altitude: ");
-  Serial.print(GPS.altitude());
+  Serial.print(altitude);
   Serial.println("m");
 
   Serial.print("Number of satellites: ");
-  Serial.println(GPS.satellites());
+  Serial.println(satellites);
 
   Serial.println();
-
 }

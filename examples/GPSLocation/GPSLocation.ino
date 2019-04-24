@@ -27,22 +27,31 @@ void setup() {
 }
 
 void loop() {
+  // check if there is new GPS data available
   if (GPS.available()) {
+    // read GPS values
+    float latitude   = GPS.latitude();
+    float longitude  = GPS.longitude();
+    float altitude   = GPS.altitude();
+    float speed      = GPS.speed();
+    int   satellites = GPS.satellites();
+
+    // print GPS values
     Serial.print("Location: ");
-    Serial.print(GPS.latitude(), 7);
+    Serial.print(latitude, 7);
     Serial.print(", ");
-    Serial.println(GPS.longitude(), 7);
+    Serial.println(longitude, 7);
 
     Serial.print("Altitude: ");
-    Serial.print(GPS.altitude());
+    Serial.print(altitude);
     Serial.println("m");
 
     Serial.print("Ground speed: ");
-    Serial.print(GPS.speed());
+    Serial.print(speed);
     Serial.println(" km/h");
 
     Serial.print("Number of satellites: ");
-    Serial.println(GPS.satellites());
+    Serial.println(satellites);
 
     Serial.println();
   }
