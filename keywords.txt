@@ -31,3 +31,6 @@ wakeup	KEYWORD2
 ########################################
 # Constants
 ########################################
+
+GPS_MODE_UART	LITERAL1
+GPS_MODE_I2C	LITERAL1

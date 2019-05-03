@@ -30,9 +30,11 @@ extern "C" {
 #define GPS_MASK_RMC 0x01
 #define GPS_MASK_GGA 0x02
 
-GPSClass::GPSClass(HardwareSerial& serial, unsigned long baudrate, int extintPin) :
+GPSClass::GPSClass(HardwareSerial& serial, unsigned long baudrate, SerialDDC& serialDDC, unsigned long clockrate, int extintPin) :
   _serial(&serial),
   _baudrate(baudrate),
+  _serialDDC(&serialDDC),
+  _clockRate(clockrate),
   _extintPin(extintPin)
 {
 }
@@ -41,12 +43,26 @@ GPSClass::~GPSClass()
 {
 }
 
-int GPSClass::begin()
+int GPSClass::begin(int mode)
 {
+  _mode = mode;
+
   pinMode(_extintPin, OUTPUT);
   digitalWrite(_extintPin, HIGH);
+  delay(100); // delay for GPS to wakeup
 
-  _serial->begin(_baudrate);
+  if (_mode == GPS_MODE_UART) {
+    _serial->begin(_baudrate);
+    _stream = _serial;
+  } else {
+    if (!_serialDDC->begin(_clockRate)) {
+      end();
+
+      return 0;
+    }
+
+    _stream = _serialDDC;
+  }
 
   _available = 0;
   _index = 0;
@@ -56,10 +72,14 @@ int GPSClass::begin()
 
 void GPSClass::end()
 {
-  _serial->end();
-
   digitalWrite(_extintPin, LOW);
   pinMode(_extintPin, INPUT);
+
+  if (_mode == GPS_MODE_UART) {
+    _serial->end();
+  } else {
+    _serialDDC->end();
+  }
 }
 
 int GPSClass::available()
@@ -143,7 +163,12 @@ void GPSClass::standby()
 
   sendUbx(0x06, 0x3b, payload, sizeof(payload));
 
-  _serial->end();
+  if (_mode == GPS_MODE_UART) {
+    _serial->end();
+  } else {
+    _serialDDC->end();
+  }
+
   digitalWrite(_extintPin, LOW);
 
   _available = 0;
@@ -152,9 +177,14 @@ void GPSClass::standby()
 
 void GPSClass::wakeup()
 {
-  _serial->begin(_baudrate);
-
   digitalWrite(_extintPin, HIGH);
+  delay(100); // delay for GPS to wakeup
+
+  if (_mode == GPS_MODE_UART) {
+    _serial->begin(_baudrate);
+  } else {
+    _serialDDC->begin(_clockRate);
+  }
 
   _available = 0;
   _index = 0;
@@ -162,8 +192,8 @@ void GPSClass::wakeup()
 
 void GPSClass::poll()
 {
-  if (_serial->available()) {
-    char c = _serial->read();
+  if (_stream->available()) {
+    char c = _stream->read();
 
 #ifdef GPS_DEBUG
     Serial.print(c);
@@ -232,27 +262,29 @@ void GPSClass::sendUbx(uint8_t cls, uint8_t id, uint8_t payload[], uint16_t leng
 {
   uint8_t ckA = 0;
   uint8_t ckB = 0;
-  uint8_t prefix[] = { cls, id, (uint8_t)(length & 0xff), (uint8_t)(length >> 8) };
 
-  for (unsigned int i = 0; i < sizeof(prefix); i++) {
-    ckA += prefix[i];
+  unsigned int cmdLength = 8 + length;
+  uint8_t cmd[cmdLength];
+
+  cmd[0] = 0xb5;
+  cmd[1] = 0x62;
+  cmd[2] = cls;
+  cmd[3] = id;
+  cmd[4] = (length & 0xff);
+  cmd[5] = (length >> 8);
+  memcpy(&cmd[6], payload, length);
+
+  // calculate checksum, start at index 2 and up to the payload
+  for (unsigned int i = 2; i < (cmdLength - 2); i++) {
+    ckA += cmd[i];
     ckB += ckA;
   }
 
-  for (unsigned int i = 0; i < length; i++) {
-    ckA += payload[i];
-    ckB += ckA;
-  }
+  cmd[cmdLength - 2] = ckA;
+  cmd[cmdLength - 1] = ckB;
 
-  _serial->write(0xb5);
-  _serial->write(0x62);
-  _serial->write(cls);
-  _serial->write(id);
-  _serial->write((uint8_t*)&length, sizeof(length));
-  _serial->write(payload, length);
-  _serial->write(ckA);
-  _serial->write(ckB);
-  _serial->flush();
+  _stream->write(cmd, cmdLength);
+  _stream->flush();
 }
 
 float GPSClass::toDegrees(float f)
@@ -263,4 +295,5 @@ float GPSClass::toDegrees(float f)
   return (degrees + (minutes / 60.0));
 }
 
-GPSClass GPS(Serial1, 9600, 7);
+static SerialDDC serialDDC(Wire, 0x42, 0xfd, 0xff);
+GPSClass GPS(Serial1, 9600, serialDDC, 400000, 7);

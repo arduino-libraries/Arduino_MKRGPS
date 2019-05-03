@@ -22,12 +22,20 @@
 
 #include <Arduino.h>
 
+#include "utility/SerialDDC.h"
+
+enum
+{
+  GPS_MODE_UART,
+  GPS_MODE_I2C,
+};
+
 class GPSClass {
 public:
-  GPSClass(HardwareSerial& serial, unsigned long baudrate, int extintPin);
+  GPSClass(HardwareSerial& serial, unsigned long baudrate, SerialDDC& serialDDC, unsigned long clockrate, int extintPin);
   virtual ~GPSClass();
 
-  int begin();
+  int begin(int mode = GPS_MODE_I2C);
   void end();
 
   int available();
@@ -55,7 +63,14 @@ private:
 private:
   HardwareSerial* _serial;
   unsigned long _baudrate;
+
+  SerialDDC* _serialDDC;
+  unsigned long _clockRate;
+
   int _extintPin;
+
+  int _mode;
+  Stream* _stream;
 
   int _available;
   char _buffer[82 + 1];
