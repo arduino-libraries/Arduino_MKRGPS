@@ -28,6 +28,7 @@ enum
 {
   GPS_MODE_UART,
   GPS_MODE_I2C,
+  GPS_MODE_SHIELD = GPS_MODE_UART
 };
 
 class GPSClass {

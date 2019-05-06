@@ -6,7 +6,7 @@
 
   Circuit:
    - MKR board
-   - MKR GPS shield attached
+   - MKR GPS attached via I2C cable
 
   This example code is in the public domain.
 */
@@ -20,6 +20,8 @@ void setup() {
     ; // wait for serial port to connect. Needed for native USB port only
   }
 
+  // If you are using the MKR GPS as shield, change the next line to pass
+  // the GPS_MODE_SHIELD parameter to the GPS.begin(...)
   if (!GPS.begin()) {
     Serial.println("Failed to initialize GPS!");
     while (1);
