@@ -48,6 +48,18 @@ matrix:
         - find . -regextype posix-extended -path './.git' -prune -or -path './src/minmea' -prune -or \( -iregex '.*\.((ino)|(h)|(hpp)|(hh)|(hxx)|(h\+\+)|(cpp)|(cc)|(cxx)|(c\+\+)|(cp)|(c)|(ipp)|(ii)|(ixx)|(inl)|(tpp)|(txx)|(tpl))$' -and -type f \) -print0 | xargs -0 -L1 bash -c 'if ! diff "$0" <(astyle --options="${HOME}/astyle/examples_formatter.conf" --dry-run < "$0"); then echo "Non-compliant code formatting in $0"; false; fi'
 
 
+    # check all files for commonly misspelled words
+    - name: 'Spell Check'
+      language: python
+      python: 3.6
+      before_install:
+        # https://github.com/codespell-project/codespell
+        - pip install codespell
+      script:
+        # codespell will ignore any words in extras/codespell-ignore-words-list.txt, which may be used to fix false positives
+        - codespell --skip="${TRAVIS_BUILD_DIR}/.git,${TRAVIS_BUILD_DIR}/src/minmea" --ignore-words="${TRAVIS_BUILD_DIR}/extras/codespell-ignore-words-list.txt" "${TRAVIS_BUILD_DIR}"
+
+
 notifications:
   webhooks:
     # use TravisBuddy to comment on any pull request that results in a failed CI build
