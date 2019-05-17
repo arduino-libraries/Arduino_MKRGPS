@@ -25,28 +25,28 @@
 #include <Wire.h>
 
 class SerialDDC : public Stream {
-public:
-  SerialDDC(TwoWire& wire, int address, uint8_t availableRegister, uint8_t readRegister);
-  virtual ~SerialDDC();
+  public:
+    SerialDDC(TwoWire& wire, int address, uint8_t availableRegister, uint8_t readRegister);
+    virtual ~SerialDDC();
 
-  int begin(uint32_t clockFrequency);
-  void end();
+    int begin(uint32_t clockFrequency);
+    void end();
 
-  // from Stream
-  virtual int available();
-  virtual int read();
-  virtual int peek();
+    // from Stream
+    virtual int available();
+    virtual int read();
+    virtual int peek();
 
-  // from Print
-  virtual size_t write(uint8_t);
-  virtual size_t write(const uint8_t *buffer, size_t size);
-  virtual void flush();
+    // from Print
+    virtual size_t write(uint8_t);
+    virtual size_t write(const uint8_t *buffer, size_t size);
+    virtual void flush();
 
-private:
-  TwoWire* _wire;
-  int _address;
-  uint8_t _availableRegister;
-  uint8_t _readRegister;
+  private:
+    TwoWire* _wire;
+    int _address;
+    uint8_t _availableRegister;
+    uint8_t _readRegister;
 };
 
 #endif

@@ -23,16 +23,13 @@ SerialDDC::SerialDDC(TwoWire& wire, int address, uint8_t availableRegister, uint
   _wire(&wire),
   _address(address),
   _availableRegister(availableRegister),
-  _readRegister(readRegister)
-{
+  _readRegister(readRegister) {
 }
 
-SerialDDC::~SerialDDC()
-{
+SerialDDC::~SerialDDC() {
 }
 
-int SerialDDC::begin(uint32_t clockFrequency)
-{
+int SerialDDC::begin(uint32_t clockFrequency) {
   _wire->begin();
   _wire->setClock(clockFrequency);
 
@@ -47,13 +44,11 @@ int SerialDDC::begin(uint32_t clockFrequency)
   return 1;
 }
 
-void SerialDDC::end()
-{
+void SerialDDC::end() {
   _wire->end();
 }
 
-int SerialDDC::available()
-{
+int SerialDDC::available() {
   int avail = _wire->available();
 
   if (avail) {
@@ -96,23 +91,19 @@ int SerialDDC::available()
   return _wire->available();
 }
 
-int SerialDDC::read()
-{
+int SerialDDC::read() {
   return _wire->read();
 }
 
-int SerialDDC::peek()
-{
+int SerialDDC::peek() {
   return _wire->peek();
 }
 
-size_t SerialDDC::write(uint8_t b)
-{
+size_t SerialDDC::write(uint8_t b) {
   return write(&b, sizeof(b));
 }
 
-size_t SerialDDC::write(const uint8_t *buffer, size_t size)
-{
+size_t SerialDDC::write(const uint8_t *buffer, size_t size) {
   if (size < 2) {
     return 0;
   }
@@ -128,7 +119,6 @@ size_t SerialDDC::write(const uint8_t *buffer, size_t size)
   return result;
 }
 
-void SerialDDC::flush()
-{
+void SerialDDC::flush() {
   // no-op
 }

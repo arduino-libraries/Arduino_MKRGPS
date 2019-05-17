@@ -24,68 +24,67 @@
 
 #include "utility/SerialDDC.h"
 
-enum
-{
+enum {
   GPS_MODE_UART,
   GPS_MODE_I2C,
   GPS_MODE_SHIELD = GPS_MODE_UART
 };
 
 class GPSClass {
-public:
-  GPSClass(HardwareSerial& serial, unsigned long baudrate, SerialDDC& serialDDC, unsigned long clockrate, int extintPin);
-  virtual ~GPSClass();
+  public:
+    GPSClass(HardwareSerial& serial, unsigned long baudrate, SerialDDC& serialDDC, unsigned long clockrate, int extintPin);
+    virtual ~GPSClass();
 
-  int begin(int mode = GPS_MODE_I2C);
-  void end();
+    int begin(int mode = GPS_MODE_I2C);
+    void end();
 
-  int available();
+    int available();
 
-  float latitude();
-  float longitude();
-  float speed(); // Speed over the ground in kph
-  float course(); // Track angle in degrees
-  float variation(); // Magnetic Variation
-  float altitude();
-  int satellites();
+    float latitude();
+    float longitude();
+    float speed(); // Speed over the ground in kph
+    float course(); // Track angle in degrees
+    float variation(); // Magnetic Variation
+    float altitude();
+    int satellites();
 
-  unsigned long getTime();
+    unsigned long getTime();
 
-  void standby();
-  void wakeup();
+    void standby();
+    void wakeup();
 
-private:
-  void poll();
-  void parseBuffer();
-  void sendUbx(uint8_t cls, uint8_t id, uint8_t payload[], uint16_t length);
+  private:
+    void poll();
+    void parseBuffer();
+    void sendUbx(uint8_t cls, uint8_t id, uint8_t payload[], uint16_t length);
 
-  static float toDegrees(float f);
+    static float toDegrees(float f);
 
-private:
-  HardwareSerial* _serial;
-  unsigned long _baudrate;
+  private:
+    HardwareSerial* _serial;
+    unsigned long _baudrate;
 
-  SerialDDC* _serialDDC;
-  unsigned long _clockRate;
+    SerialDDC* _serialDDC;
+    unsigned long _clockRate;
 
-  int _extintPin;
+    int _extintPin;
 
-  int _mode;
-  Stream* _stream;
+    int _mode;
+    Stream* _stream;
 
-  int _available;
-  char _buffer[82 + 1];
-  int _index;
+    int _available;
+    char _buffer[82 + 1];
+    int _index;
 
-  float _latitude;
-  float _longitude;
-  float _speed;
-  float _course;
-  float _variation;
-  float _altitude;
-  int _satellites;
+    float _latitude;
+    float _longitude;
+    float _speed;
+    float _course;
+    float _variation;
+    float _altitude;
+    int _satellites;
 
-  struct timespec _ts;
+    struct timespec _ts;
 };
 
 extern GPSClass GPS;

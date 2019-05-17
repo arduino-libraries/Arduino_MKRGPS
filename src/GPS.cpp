@@ -20,7 +20,7 @@
 // Useful info. on NMEA data: https://www.gpsinformation.org/dale/nmea.htm
 
 extern "C" {
-  #include "minmea/minmea.h"
+#include "minmea/minmea.h"
 }
 
 // #define GPS_DEBUG
@@ -35,16 +35,13 @@ GPSClass::GPSClass(HardwareSerial& serial, unsigned long baudrate, SerialDDC& se
   _baudrate(baudrate),
   _serialDDC(&serialDDC),
   _clockRate(clockrate),
-  _extintPin(extintPin)
-{
+  _extintPin(extintPin) {
 }
 
-GPSClass::~GPSClass()
-{
+GPSClass::~GPSClass() {
 }
 
-int GPSClass::begin(int mode)
-{
+int GPSClass::begin(int mode) {
   _mode = mode;
 
   pinMode(_extintPin, OUTPUT);
@@ -70,8 +67,7 @@ int GPSClass::begin(int mode)
   return 1;
 }
 
-void GPSClass::end()
-{
+void GPSClass::end() {
   digitalWrite(_extintPin, LOW);
   pinMode(_extintPin, INPUT);
 
@@ -82,8 +78,7 @@ void GPSClass::end()
   }
 }
 
-int GPSClass::available()
-{
+int GPSClass::available() {
   poll();
 
   if (_available == (GPS_MASK_RMC | GPS_MASK_GGA)) {
@@ -95,8 +90,7 @@ int GPSClass::available()
   return 0;
 }
 
-float GPSClass::latitude()
-{
+float GPSClass::latitude() {
   if (isnan(_latitude)) {
     return NAN;
   }
@@ -104,8 +98,7 @@ float GPSClass::latitude()
   return toDegrees(_latitude);
 }
 
-float GPSClass::longitude()
-{
+float GPSClass::longitude() {
   if (isnan(_longitude)) {
     return NAN;
   }
@@ -113,19 +106,16 @@ float GPSClass::longitude()
   return toDegrees(_longitude);
 }
 
-float GPSClass::speed()
-{
+float GPSClass::speed() {
   // convert speed from knots to kph
   return _speed * 1.852;
 }
 
-float GPSClass::course()
-{
+float GPSClass::course() {
   return _course;
 }
 
-float GPSClass::variation()
-{
+float GPSClass::variation() {
   if (isnan(_variation)) {
     return NAN;
   }
@@ -133,23 +123,19 @@ float GPSClass::variation()
   return toDegrees(_variation);
 }
 
-float GPSClass::altitude()
-{
+float GPSClass::altitude() {
   return _altitude;
 }
 
-int GPSClass::satellites()
-{
+int GPSClass::satellites() {
   return _satellites;
 }
 
-unsigned long GPSClass::getTime()
-{
+unsigned long GPSClass::getTime() {
   return _ts.tv_sec;
 }
 
-void GPSClass::standby()
-{
+void GPSClass::standby() {
   byte payload[48];
 
   memset(payload, 0x00, sizeof(payload));
@@ -158,7 +144,7 @@ void GPSClass::standby()
   // flags:
   //       extintSel    = EXTINT0
   //       extintWake   = enabled, keep receiver awake as long as selected EXTINT pin is 'high'
-  //       extintBackup = enabled, force receiver into BACKUP mode when selected EXTINT pin is 'low' 
+  //       extintBackup = enabled, force receiver into BACKUP mode when selected EXTINT pin is 'low'
   payload[4] = 0x60;
 
   sendUbx(0x06, 0x3b, payload, sizeof(payload));
@@ -175,8 +161,7 @@ void GPSClass::standby()
   _index = 0;
 }
 
-void GPSClass::wakeup()
-{
+void GPSClass::wakeup() {
   digitalWrite(_extintPin, HIGH);
   delay(100); // delay for GPS to wakeup
 
@@ -190,14 +175,13 @@ void GPSClass::wakeup()
   _index = 0;
 }
 
-void GPSClass::poll()
-{
+void GPSClass::poll() {
   if (_stream->available()) {
     char c = _stream->read();
 
-#ifdef GPS_DEBUG
+    #ifdef GPS_DEBUG
     Serial.print(c);
-#endif
+    #endif
 
     if (c == '$') {
       _index = 0;
@@ -215,51 +199,49 @@ void GPSClass::poll()
   }
 }
 
-void GPSClass::parseBuffer()
-{
+void GPSClass::parseBuffer() {
   int sentenceId = minmea_sentence_id(_buffer, false);
 
   switch (sentenceId) {
     case MINMEA_SENTENCE_RMC: {
-      struct minmea_sentence_rmc frame;
-      
-      if (minmea_parse_rmc(&frame, _buffer) && frame.valid) {
-        _latitude = minmea_tofloat(&frame.latitude);
-        _longitude = minmea_tofloat(&frame.longitude);
-        _speed = minmea_tofloat(&frame.speed);
-        _course = minmea_tofloat(&frame.course);
-        _variation = minmea_tofloat(&frame.variation);
+        struct minmea_sentence_rmc frame;
 
-        minmea_gettime(&_ts, &frame.date, &frame.time);
+        if (minmea_parse_rmc(&frame, _buffer) && frame.valid) {
+          _latitude = minmea_tofloat(&frame.latitude);
+          _longitude = minmea_tofloat(&frame.longitude);
+          _speed = minmea_tofloat(&frame.speed);
+          _course = minmea_tofloat(&frame.course);
+          _variation = minmea_tofloat(&frame.variation);
 
-        _available |= GPS_MASK_RMC;
+          minmea_gettime(&_ts, &frame.date, &frame.time);
+
+          _available |= GPS_MASK_RMC;
+        }
+
+        break;
       }
-
-      break;
-    }
 
     case MINMEA_SENTENCE_GGA: {
-      struct minmea_sentence_gga frame;
-      
-      if (minmea_parse_gga(&frame, _buffer) && frame.fix_quality != 0) {
-        _latitude = minmea_tofloat(&frame.latitude);
-        _longitude = minmea_tofloat(&frame.longitude);
-        _altitude = minmea_tofloat(&frame.altitude);
-        _satellites = frame.satellites_tracked;
+        struct minmea_sentence_gga frame;
 
-        _available |= GPS_MASK_GGA;
+        if (minmea_parse_gga(&frame, _buffer) && frame.fix_quality != 0) {
+          _latitude = minmea_tofloat(&frame.latitude);
+          _longitude = minmea_tofloat(&frame.longitude);
+          _altitude = minmea_tofloat(&frame.altitude);
+          _satellites = frame.satellites_tracked;
+
+          _available |= GPS_MASK_GGA;
+        }
+
+        break;
       }
-
-      break;
-    }
 
     default:
       break;
   }
 }
 
-void GPSClass::sendUbx(uint8_t cls, uint8_t id, uint8_t payload[], uint16_t length)
-{
+void GPSClass::sendUbx(uint8_t cls, uint8_t id, uint8_t payload[], uint16_t length) {
   uint8_t ckA = 0;
   uint8_t ckB = 0;
 
@@ -287,8 +269,7 @@ void GPSClass::sendUbx(uint8_t cls, uint8_t id, uint8_t payload[], uint16_t leng
   _stream->flush();
 }
 
-float GPSClass::toDegrees(float f)
-{
+float GPSClass::toDegrees(float f) {
   float degrees = (int)(f / 100.0);
   float minutes = f - (100.0 * degrees);
 
