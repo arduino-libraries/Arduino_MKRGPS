@@ -1,5 +1,7 @@
 = MKRGPS Library for Arduino =
 
+image:https://travis-ci.org/arduino-libraries/Arduino_MKRGPS.svg?branch=master[Build Status, link=https://travis-ci.org/arduino-libraries/Arduino_MKRGPS]
+
 Allows you to read the location from the GPS on your MKR GPS shield.
 
 This library is based on https://github.com/kosma/minmea[minmea].
