@@ -23,7 +23,7 @@ extern "C" {
   #include "minmea/minmea.h"
 }
 
-// #define GPS_DEBUG
+//#define GPS_DEBUG
 
 #include "GPS.h"
 
@@ -117,6 +117,11 @@ float GPSClass::speed()
 {
   // convert speed from knots to kph
   return _speed * 1.852;
+}
+
+float GPSClass::speedRAW()
+{
+  return _speed;
 }
 
 float GPSClass::course()
