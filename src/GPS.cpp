@@ -52,6 +52,12 @@ int GPSClass::begin(int mode)
   delay(100); // delay for GPS to wakeup
 
   if (_mode == GPS_MODE_UART) {
+    if (!_serial->begin(_baudrate)) {
+      end();
+
+      return 0;
+    }
+
     _serial->begin(_baudrate);
     _stream = _serial;
   } else {
@@ -158,7 +164,7 @@ void GPSClass::standby()
   // flags:
   //       extintSel    = EXTINT0
   //       extintWake   = enabled, keep receiver awake as long as selected EXTINT pin is 'high'
-  //       extintBackup = enabled, force receiver into BACKUP mode when selected EXTINT pin is 'low' 
+  //       extintBackup = enabled, force receiver into BACKUP mode when selected EXTINT pin is 'low'
   payload[4] = 0x60;
 
   sendUbx(0x06, 0x3b, payload, sizeof(payload));
@@ -222,7 +228,7 @@ void GPSClass::parseBuffer()
   switch (sentenceId) {
     case MINMEA_SENTENCE_RMC: {
       struct minmea_sentence_rmc frame;
-      
+
       if (minmea_parse_rmc(&frame, _buffer) && frame.valid) {
         _latitude = minmea_tofloat(&frame.latitude);
         _longitude = minmea_tofloat(&frame.longitude);
@@ -240,7 +246,7 @@ void GPSClass::parseBuffer()
 
     case MINMEA_SENTENCE_GGA: {
       struct minmea_sentence_gga frame;
-      
+
       if (minmea_parse_gga(&frame, _buffer) && frame.fix_quality != 0) {
         _latitude = minmea_tofloat(&frame.latitude);
         _longitude = minmea_tofloat(&frame.longitude);
