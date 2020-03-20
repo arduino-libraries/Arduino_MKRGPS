@@ -54,15 +54,16 @@ int GPSClass::begin(int mode)
   if (_mode == GPS_MODE_UART) {
     _serial->begin(_baudrate);
     _stream = _serial;
-  } else {
-    if (!_serialDDC->begin(_clockRate)) {
+  } 
+  
+  if (!_serialDDC->begin(_clockRate)) {
       end();
 
       return 0;
     }
 
     _stream = _serialDDC;
-  }
+  
 
   _available = 0;
   _index = 0;
