@@ -58,16 +58,13 @@ int GPSClass::begin(int mode)
   
   if (!_serialDDC->begin(_clockRate)) {
       end();
-
       return 0;
     }
-
-    _stream = _serialDDC;
   
-
-  _available = 0;
-  _index = 0;
-
+   _stream = _serialDDC;
+   _available = 0;
+   _index = 0;
+  
   return 1;
 }
 
