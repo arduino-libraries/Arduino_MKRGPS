@@ -65,7 +65,7 @@ int GPSClass::begin(int mode)
    _available = 0;
    _index = 0;
   
-  return 1;
+   return 1;
 }
 
 void GPSClass::end()
