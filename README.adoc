@@ -4,6 +4,8 @@ Allows you to read the location from the GPS on your MKR GPS shield.
 
 This library is based on https://github.com/kosma/minmea[minmea].
 
+For more information about this library please visit us at https://www.arduino.cc/en/Reference/ArduinoMKRGPS
+
 == License ==
 
 Copyright (c) 2019 Arduino SA. All rights reserved.
