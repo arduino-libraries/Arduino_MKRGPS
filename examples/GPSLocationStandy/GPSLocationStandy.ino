@@ -1,14 +1,14 @@
 /*
-  GPS Location Standy
+  GPS Location Standby
 
   This sketch uses the GPS to determine the location of the board
-  and prints it to the Serial monitor.
+  and prints it to the Serial Monitor.
 
-  It puts the GPS to in standby mode every 10 seconds, then wakes it up.
+  It puts the GPS into standby mode every 10 seconds, then wakes it up.
 
   Circuit:
    - MKR board
-   - MKR GPS attached via I2C cable
+   - MKR GPS Shield attached via I2C cable
 
   This example code is in the public domain.
 */
