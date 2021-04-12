@@ -2,11 +2,11 @@
   GPS Location
 
   This sketch uses the GPS to determine the location of the board
-  and prints it to the Serial monitor.
+  and prints it to the Serial Monitor.
 
   Circuit:
    - MKR board
-   - MKR GPS attached via I2C cable
+   - MKR GPS Shield attached via I2C cable
 
   This example code is in the public domain.
 */
