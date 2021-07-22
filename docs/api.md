@@ -41,7 +41,7 @@ if (!GPS.begin()) {
 * [variation()](#variation)
 * [altitude()](#altitude)
 * [satellites()](#satellites)
-* [getTime()](#getTime)
+* [getTime()](#gettime)
 * [standby()](#standby)
 * [wakeup()](#wakeup)
 
@@ -88,7 +88,7 @@ GPS.end();
 * [variation()](#variation)
 * [altitude()](#altitude)
 * [satellites()](#satellites)
-* [getTime()](#getTime)
+* [getTime()](#gettime)
 * [standby()](#standby)
 * [wakeup()](#wakeup)
 
@@ -137,7 +137,7 @@ if (GPS.available()) {
 * [variation()](#variation)
 * [altitude()](#altitude)
 * [satellites()](#satellites)
-* [getTime()](#getTime)
+* [getTime()](#gettime)
 * [standby()](#standby)
 * [wakeup()](#wakeup)
 
@@ -189,7 +189,7 @@ if (GPS.available()) {
 * [variation()](#variation)
 * [altitude()](#altitude)
 * [satellites()](#satellites)
-* [getTime()](#getTime)
+* [getTime()](#gettime)
 * [standby()](#standby)
 * [wakeup()](#wakeup)
 
@@ -241,7 +241,7 @@ if (GPS.available()) {
 * [variation()](#variation)
 * [altitude()](#altitude)
 * [satellites()](#satellites)
-* [getTime()](#getTime)
+* [getTime()](#gettime)
 * [standby()](#standby)
 * [wakeup()](#wakeup)
 
@@ -291,7 +291,7 @@ if (GPS.available()) {
 * [variation()](#variation)
 * [altitude()](#altitude)
 * [satellites()](#satellites)
-* [getTime()](#getTime)
+* [getTime()](#gettime)
 * [standby()](#standby)
 * [wakeup()](#wakeup)
 
@@ -341,7 +341,7 @@ if (GPS.available()) {
 * [variation()](#variation)
 * [altitude()](#altitude)
 * [satellites()](#satellites)
-* [getTime()](#getTime)
+* [getTime()](#gettime)
 * [standby()](#standby)
 * [wakeup()](#wakeup)
 
@@ -391,7 +391,7 @@ if (GPS.available()) {
 * [course()](#course)
 * [altitude()](#altitude)
 * [satellites()](#satellites)
-* [getTime()](#getTime)
+* [getTime()](#gettime)
 * [standby()](#standby)
 * [wakeup()](#wakeup)
 
@@ -441,7 +441,7 @@ if (GPS.available()) {
 * [course()](#course)
 * [variation()](#variation)
 * [satellites()](#satellites)
-* [getTime()](#getTime)
+* [getTime()](#gettime)
 * [standby()](#standby)
 * [wakeup()](#wakeup)
 
@@ -490,7 +490,7 @@ if (GPS.available()) {
 * [course()](#course)
 * [variation()](#variation)
 * [altitude()](#altitude)
-* [getTime()](#getTime)
+* [getTime()](#gettime)
 * [standby()](#standby)
 * [wakeup()](#wakeup)
 
@@ -539,7 +539,7 @@ if (GPS.available()) {
 * [course()](#course)
 * [variation()](#variation)
 * [altitude()](#altitude)
-* [getTime()](#getTime)
+* [getTime()](#gettime)
 * [standby()](#standby)
 * [wakeup()](#wakeup)
 
@@ -643,7 +643,7 @@ while (!GPS.available());
 * [variation()](#variation)
 * [altitude()](#altitude)
 * [satellites()](#satellites)
-* [getTime()](#getTime)
+* [getTime()](#gettime)
 * [wakeup()](#wakeup)
 
 ### `wakeup()`
@@ -697,5 +697,5 @@ while (!GPS.available());
 * [variation()](#variation)
 * [altitude()](#altitude)
 * [satellites()](#satellites)
-* [getTime()](#getTime)
+* [getTime()](#gettime)
 * [standby()](#standby)
